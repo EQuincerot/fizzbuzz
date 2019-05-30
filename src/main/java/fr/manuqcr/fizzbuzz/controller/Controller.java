@@ -5,6 +5,8 @@ import fr.manuqcr.fizzbuzz.model.Request;
 import fr.manuqcr.fizzbuzz.service.IFizzBuzzService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +31,16 @@ public class Controller {
         this.service = service;
     }
 
-    @ApiOperation("Returns the famous Fizzbuzz result")
+    @ApiOperation(value = "Returns the famous Fizzbuzz result",
+            notes = "Returns a list of strings with numbers from 1 to limit," +
+                    " where: all multiples of int1 are replaced by str1, " +
+                    "all multiples of int2 are replaced by str2, " +
+                    "all multiples of int1 and int2 are replaced by str1str2.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = String.class, responseContainer = "List"),
+            @ApiResponse(code = 400, message = "Bad Request. Check the parameters"),
+            @ApiResponse(code = 413, message = "Limit is too high. Decrease the limit")
+    })
     @GetMapping(value = "/api/fizzbuzz", produces = "application/json")
     public Stream<String> fizzbuzz(
             @ApiParam(required = true)
