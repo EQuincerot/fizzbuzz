@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.function.Predicate;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static fr.manuqcr.fizzbuzz.helper.Helper.PATTERN;
@@ -23,6 +23,9 @@ import static fr.manuqcr.fizzbuzz.helper.Helper.isPositiveInt;
 
 @RestController
 public class Controller {
+
+    private static final int MAX_LIMIT = 10000000;
+    Logger logger = LoggerFactory.getLogger(Controller.class);
 
     final IFizzBuzzService service;
 
@@ -64,9 +67,14 @@ public class Controller {
             // Limit = 0 seems useless
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "limit should be integer values greater than 0");
         }
-        if (!Stream.of(str1, str2).allMatch(Helper::isNotNullWord)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "String replacements should match this pattern: "+ PATTERN);
+        if (limit > MAX_LIMIT) {
+            throw new ResponseStatusException(HttpStatus.PAYLOAD_TOO_LARGE, "limit should be smaller than " + MAX_LIMIT);
         }
-        return service.fizzBuzz(new Request(int1, int2, limit, str1, str2));
+        if (!Stream.of(str1, str2).allMatch(Helper::isNotNullWord)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "String replacements should match this pattern: " + PATTERN);
+        }
+        Request request = new Request(int1, int2, limit, str1, str2);
+        logger.info("Calling FizzBuzz for: {}", request);
+        return service.fizzBuzz(request);
     }
 }
