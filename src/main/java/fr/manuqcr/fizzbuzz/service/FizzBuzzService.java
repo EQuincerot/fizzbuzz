@@ -1,14 +1,17 @@
 package fr.manuqcr.fizzbuzz.service;
 
 import fr.manuqcr.fizzbuzz.model.Request;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class FizzBuzzService {
+@Service
+public class FizzBuzzService implements IFizzBuzzService {
 
-    List<String> fizzBuzz(Request request) {
+    @Override
+    public List<String> fizzBuzz(Request request) {
         return IntStream.range(1, request.getLimit() + 1)
                 .mapToObj(i -> {
                     String result = "";
