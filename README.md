@@ -1,12 +1,24 @@
-=== Project Description
-TODO
+## Project Description 
 
-=== Requirements
+Fizzbuzz API endpoint.
+
+### Requirements
 - open-jdk 11
 
-=== Run
-./gradlew bootRun
-If port 8080 is already used, please add the option `-Dserver.port=PORT` with PORT, the port of your choice.
+### Run
+To start the server, execute:
 
-== IDE configuration
-./gradlew idea
+    ./gradlew bootRun
+
+The port override is available through the `-Dserver.port=PORT` option.
+
+### Api
+
+The API is available at `/api/fizzbuzz`
+
+A swagger documentation is available at `/swagger-ui.html`
+
+### IDE configuration
+For IntelliJ IDEA, run:
+
+    ./gradlew idea
