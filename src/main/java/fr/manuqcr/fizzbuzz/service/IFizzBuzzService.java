@@ -2,8 +2,8 @@ package fr.manuqcr.fizzbuzz.service;
 
 import fr.manuqcr.fizzbuzz.model.Request;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 public interface IFizzBuzzService {
-    List<String> fizzBuzz(Request request);
+    Stream<String> fizzBuzz(Request request);
 }

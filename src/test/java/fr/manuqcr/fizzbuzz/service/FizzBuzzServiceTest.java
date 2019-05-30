@@ -6,6 +6,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
@@ -16,7 +17,7 @@ class FizzBuzzServiceTest {
     @ParameterizedTest
     @MethodSource("params")
     void testFizzBuzz(Request r, List<String> expectedResult) {
-        assertEquals(expectedResult, new FizzBuzzService().fizzBuzz(r));
+        assertEquals(expectedResult, new FizzBuzzService().fizzBuzz(r).collect(Collectors.toList()));
     }
 
 

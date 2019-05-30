@@ -5,11 +5,15 @@ import fr.manuqcr.fizzbuzz.service.IFizzBuzzService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
+import java.util.stream.Stream;
+
+import static fr.manuqcr.fizzbuzz.helper.Helper.isPositiveInt;
 
 @RestController
 public class Controller {
@@ -23,7 +27,7 @@ public class Controller {
 
     @ApiOperation("Returns the famous Fizzbuzz result")
     @GetMapping(value = "/api/fizzbuzz", produces = "application/json")
-    public List<String> fizzbuzz(
+    public Stream<String> fizzbuzz(
             @ApiParam(required = true)
             @RequestParam(value = "int1") Integer int1,
 
@@ -38,6 +42,9 @@ public class Controller {
 
             @ApiParam(value = "Replacement for numbers divisible by int2", required = true)
             @RequestParam(value = "str2") String str2) {
+        if (!isPositiveInt(int1) || !isPositiveInt(int2)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Int1 and int2 should be integer values greater than 0");
+        }
         return service.fizzBuzz(new Request(int1, int2, limit, str1, str2));
     }
 }

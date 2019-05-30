@@ -3,15 +3,14 @@ package fr.manuqcr.fizzbuzz.service;
 import fr.manuqcr.fizzbuzz.model.Request;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Service
 public class FizzBuzzService implements IFizzBuzzService {
 
     @Override
-    public List<String> fizzBuzz(Request request) {
+    public Stream<String> fizzBuzz(Request request) {
         return IntStream.range(1, request.getLimit() + 1)
                 .mapToObj(i -> {
                     String result = "";
@@ -25,8 +24,7 @@ public class FizzBuzzService implements IFizzBuzzService {
                         result = "" + i;
                     }
                     return result;
-                })
-                .collect(Collectors.toList());
+                });
     }
 
     boolean isFactor(int i, int factor) {
