@@ -1,5 +1,6 @@
 package fr.manuqcr.fizzbuzz.controller;
 
+import fr.manuqcr.fizzbuzz.helper.Helper;
 import fr.manuqcr.fizzbuzz.model.Request;
 import fr.manuqcr.fizzbuzz.service.IFizzBuzzService;
 import io.swagger.annotations.ApiOperation;
@@ -11,8 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import static fr.manuqcr.fizzbuzz.helper.Helper.PATTERN;
 import static fr.manuqcr.fizzbuzz.helper.Helper.isPositiveInt;
 
 @RestController
@@ -42,8 +46,15 @@ public class Controller {
 
             @ApiParam(value = "Replacement for numbers divisible by int2", required = true)
             @RequestParam(value = "str2") String str2) {
-        if (!isPositiveInt(int1) || !isPositiveInt(int2)) {
+        if (!Stream.of(int1, int2).allMatch(Helper::isPositiveInt)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Int1 and int2 should be integer values greater than 0");
+        }
+        if (!isPositiveInt(limit)) {
+            // Limit = 0 seems useless
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "limit should be integer values greater than 0");
+        }
+        if (!Stream.of(str1, str2).allMatch(Helper::isNotNullWord)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "String replacements should match this pattern: "+ PATTERN);
         }
         return service.fizzBuzz(new Request(int1, int2, limit, str1, str2));
     }
